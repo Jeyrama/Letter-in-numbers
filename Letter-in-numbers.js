@@ -43,3 +43,5 @@ function doMath(s){
            .reduce((r, x) => ops[i++%4](r, x));
   return Math.round(r);
 }
+
+// or
