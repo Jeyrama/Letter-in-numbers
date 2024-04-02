@@ -45,3 +45,62 @@ function doMath(s){
 }
 
 // or
+
+function doMath(s){
+  const numbers = getNumbers(s);
+  const dictionary = createDictionary(numbers);
+  return computeValues(dictionary);
+}
+
+function getNumbers(s) {
+  return s.split(' ').map(individualString => {
+    const key = individualString.replace(/\d/g, '');
+    const value = individualString.replace(/\D/g, '')
+    return {key, value};
+    });
+}
+
+function createDictionary(arr) {
+  const dictionary = {};
+  arr.forEach(({key, value}) => {
+    if (dictionary[key]) {
+      if (Array.isArray(dictionary[key])) {
+        dictionary[key].push(value);
+      } else {
+        dictionary[key] = [dictionary[key], value];
+      }
+    } else {
+      dictionary[key] = value;
+    }
+  });
+  return dictionary;
+}
+
+function computeValues(obj) {
+  let index = -1;
+  let current = 0;
+  const calculate = {
+    '-1': (x, y) => (x + y),
+    0: (x, y) => (x + y),
+    1: (x, y) => (x - y),
+    2: (x, y) => (x * y),
+    3: (x, y) => (x / y)
+  };
+  for (let letterCode = 10; letterCode < 36; letterCode++) {
+    const value = obj[letterCode.toString(36)];
+    if (value) {
+      console.log(value);
+      console.log(index);
+      if (Array.isArray(value)) {
+        value.forEach(number => {
+          current = calculate[index % 4](Number(current), Number(number));
+          index++;
+        });
+      } else {
+        current = calculate[index % 4](Number(current), Number(value));
+        index++;
+      }
+    }
+  }
+  return Math.round(current);
+}
